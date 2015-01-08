@@ -1,0 +1,77 @@
+﻿@model dynamic
+
+<h2>Perf</h2>
+<label>Set Up
+    <textarea data-bind="value: SetUp.Code, codemirror: { lineNumbers: true, mode:'text/x-csharp' }"></textarea>
+</label>
+<label>Tear Down
+    <textarea data-bind="value: TearDown.Code, codemirror: { lineNumbers: true, mode:'text/x-csharp' }"></textarea>
+</label>
+<ul data-bind="foreach: Tests">
+    <li>
+        <div>
+            <input type="text" data-bind="value: Name"/>
+        </div>
+        <div>
+            <textarea data-bind="value: Code, codemirror: { lineNumbers: true, mode:'text/x-csharp' }"></textarea>
+        </div>
+        <div>
+
+            <a href='#' data-bind="click: $root.RemoveTest, visible: $root.Tests().length > 1">Remove</a>
+        </div>
+    </li>
+</ul>
+<div><input type="button" value="Add Test" data-bind="click: AddTest" />
+</div>
+<div><input type="button" value="Run" data-bind="click: Run, enabled: Tests().length > 0" />
+</div>
+<script> 
+    ko.bindingHandlers.codemirror = {
+        init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
+            var options = $.extend(valueAccessor(), {
+                onChange: function (cm) {
+                    allBindingsAccessor().value(cm.getValue());
+                }
+            });
+            var editor = CodeMirror.fromTextArea(element, options);
+            element.editor = editor;
+            //editor.setValue(allBindingsAccessor.get('value') || '');
+            editor.refresh();
+            var wrapperElement = $(editor.getWrapperElement());
+
+            ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+                wrapperElement.remove();
+            });
+        }
+    };
+
+    var Benchmark = function () {
+        var self = this;
+        self.SetUp = new BenchmarkUnit();
+        self.TearDown = new BenchmarkUnit();
+        self.Tests = ko.observableArray([new BenchmarkUnit("New")]);
+        self.AddTest = function() {
+            self.Tests.push(new BenchmarkUnit("New"));
+        };
+        self.RemoveTest = function(test) {
+            self.Tests.remove(test);
+        }
+        self.Run = function () {
+            $.ajax({
+                type: "POST",
+                url: "/api/benchmark",
+                contentType: "application/json",
+                data: ko.toJSON(self)
+            }).done(function (data) {
+                alert(JSON.stringify(data));
+            });
+        };
+    };
+
+    var BenchmarkUnit = function (name, code) {
+        this.Name = name;
+        this.Code = code;
+    }
+
+    ko.applyBindings(new Benchmark());
+</script>

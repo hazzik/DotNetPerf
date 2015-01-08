@@ -1,0 +1,3 @@
+[submodule "BenchmarkDotNet"]
+	path = BenchmarkDotNet
+	url = https://github.com/hazzik/BenchmarkDotNet.git
