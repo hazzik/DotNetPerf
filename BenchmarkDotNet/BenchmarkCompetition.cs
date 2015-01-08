@@ -46,6 +46,11 @@ namespace BenchmarkDotNet
             get { return GetType().Name.WithoutSuffix("Competition"); }
         }
 
+        public IEnumerable<BenchmarkCompetitionTask> Tasks
+        {
+            get { return tasks; }
+        }
+
         protected virtual void Prepare()
         {
         }
