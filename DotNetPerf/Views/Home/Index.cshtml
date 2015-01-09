@@ -61,8 +61,8 @@
         self.SetUp = new BenchmarkUnit();
         self.TearDown = new BenchmarkUnit();
         self.Tests = ko.observableArray([
-            new BenchmarkUnit("Code Snippet 1"),
-            new BenchmarkUnit("Code Snippet 2")
+            new BenchmarkUnit("Code Snippet 1", "for(var i=0;i<1000;i++);"),
+            new BenchmarkUnit("Code Snippet 2", "for(var i=0;i<2000;i++);")
         ]);
         self.Results = ko.observableArray([]);
         self.AddTest = function() {
