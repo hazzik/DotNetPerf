@@ -6,8 +6,8 @@ namespace DotNetPerf.Controllers
     {
         public ActionResult Index()
         {
+            ViewBag.Title = "DotNetPerf - .NET performance playground";
             return View();
         }
-         
     }
 }
